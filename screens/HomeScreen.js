@@ -14,19 +14,19 @@ class HomeScreen extends Component {
     state ={
         query: "",
         data: [],
+
     }
 
     _handleQuery = (text) => {
         this.setState({
             query: text
         },
-        // ()=> {
-            this._loadInfo
-        // }
+        this._loadInfo
         )
         //straight to change the API instead of state.query? 
     }
 
+    //use throttle ? check cores ?
     _fetchInfo = () => {
         const { query, data } = this.state;
         const url = `https://api.deezer.com/search?q=track:"${query}"&limit=20&order=RANKING?strict=on`;
@@ -34,28 +34,23 @@ class HomeScreen extends Component {
         fetch(url)
             .then(res => res.json())
             .then((resJson) => {
-                this.setState({
-                    data: [...resJson]
-                })
+                this.setState(
+                    {
+                    data: [...resJson.data]
+                    },
+                    // this._loadInfo
+                )
             })
     }
 
     _loadInfo = () => {
         const { data } = this.state;
-        data && data.map((index) => {
-            return (
-                <Text 
-                    style={styles.loadInfo}
-                    key={index}
-                >
-                    {data.id}
-                </Text>
-            )
-        })
+        
     }
 
 
   render() {
+      const { data } = this.state;
     return (
       <View style={styles.container}>
         <TextInput
@@ -65,7 +60,18 @@ class HomeScreen extends Component {
             onChange={this._handleQuery}
         />
         <Text>{this.state.query}</Text>
-        {this._loadInfo}
+        {
+            data && data.map((item, index) => {
+                return (
+                    <Text 
+                        style={styles.loadInfo}
+                        key={item.id}
+                    >
+                        {item.title}
+                    </Text>
+                )
+            })
+        }
       </View>
     )
   }
