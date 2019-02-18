@@ -8,10 +8,13 @@ import {
     StatusBar,
     TextInput,
     FlatList,
+    TouchableOpacity,
+
 
 } from 'react-native'
 import { Dimensions } from 'react-native';
 import window from '../constants/Layout'
+import { throttle, debounce } from 'throttle-debounce'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -25,13 +28,13 @@ class HomeScreen extends Component {
 
     componentDidMount(){
     }
-
     
     _handleQuery = (text) => {
         this.setState({
             query: text
         },
         this._fetchInfo
+            // this._loadInfo
         )
         //straight to change the API instead of state.query? 
     }
@@ -46,50 +49,64 @@ class HomeScreen extends Component {
             .then((resJson) => {
                 this.setState(
                     {
-                    data: resJson.data
-                    },
-                //   console.log(data)
+                    data: [...resJson.data]
+                    }
+                    // this._loadInfo
                 )   
             })
+    }
+
+    _loadInfo = () => {
+        const { data, dataId, query } = this.state;
+        console.log(query)
+        // data.map((item) => {
+        //     console.log(item.id)
+        // })
+    }
+
+    clearQuery = () => {
+        this.setState({
+            text: '',
+        });
+        Keyboard.dismiss()
+    }
+
+    _Suggestion = ({ item }) => {
+        return (
+            <TouchableOpacity
+                style={styles.suggestion}
+                // onPress={ () => navigation.navigate('SongScreen', {...item})}
+            >
+                <Image 
+                //    source={{ uri: }} 
+                />
+                <View>
+                    <Text>
+                        {item.artist.name}
+                    </Text>
+                </View>
+            </TouchableOpacity>
+            )
     }
 
 
 
   render() {
-      const { data, dataId } = this.state;
-      console.log('render')
-    //   const loadInfo = data && data.map((item, index) => {
-    //     //   console.log(item.artist.name)
-    //     //   console.log(item.album.title)
-
-    //       return (
-    //         <Text 
-    //             style={{flex:1, flexDirection:'row'}}
-    //             key={item.id}
-    //         >
-    //             {item.artist.name}
-    //         </Text>
-    //       )
-
-    //   })
+      const { data, dataId, query } = this.state;
 
     return (
       <View style={styles.container}>
         <TextInput
             placeholder="Search Song ..."
             clearButtonMode="always"
-            onChange={this._handleQuery}
+            onChangeText={this._handleQuery}
+
         />
         <FlatList
             data={data} 
-            renderItem={({item}) => {
-                return (
-                <Text style={styles.text}>{item.artist.name}</Text>
-                )
-            }}
+            renderItem={this._Suggestion}
             keyExtractor={(item, index) => index.toString()}
         />
-        {/* {loadInfo} */}
 
         <Text>window width: {window.width}</Text>
         <Text>awindow height: {window.height}</Text>
@@ -101,7 +118,7 @@ class HomeScreen extends Component {
 //  styles
 const styles = StyleSheet.create({
     container: {
-        flex:2,
+        flex:1,
         paddingTop:20,
         justifyContent: 'center',
         alignItems: 'center'
@@ -111,6 +128,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
 
+    },
+    suggestion: {
+        flex: 1
     },
     loadInfo: {
         flex:1,
