@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, StyleSheet, View,
     Button,
     ScrollView,
+    TouchableOpacity,
  } from 'react-native'
 
 export default class SongScreen extends Component {
@@ -11,38 +12,79 @@ export default class SongScreen extends Component {
     //     }
     // }
     state = {
+        songTitle: '',
+        albumId:'',
+        albumTitle:'',
+        artistName:'',
+        artistId:'',
         lyrics: '',
         load: false
     }
 
-    async componentDidMount(){
-        console.log('SONGSCREEN')
-        const { title, artist } = this.props.navigation.state.params;
-        console.log(artist)
-        
+    componentDidMount(){
+        const { title, artist, album } = this.props.navigation.state.params;
         const url = `https://api.lyrics.ovh/v1/`
         const lyricsQuery = `${artist.name}/${title}`
-        this._fetchLyrics(url, lyricsQuery)
+        
+        this._saveState()
+        this._fetchLyrics(url+lyricsQuery)
+    }
+
+    _saveState = () => {
+        const { title, artist, album } = this.props.navigation.state.params;
+        this.setState({
+            songTitle: title,
+            albumId: album.id,
+            albumTitle: album.title,
+            artistId: artist.id,
+            artistName: artist.name
+        })
     }
     
-    _fetchLyrics = (url, lyrics) => {
-        console.log(url+lyrics)
+    _fetchLyrics = (url) => {
+        console.log(url)
 
-        fetch(url+lyrics)
+        fetch(url)
             .then(res => res.json())
             .then((res) => {
                 this.setState({
                     lyrics: res.lyrics,
                     load: true
-                },
-                console.log(res.lyrics))
+                })
+                
             })
+    }
+
+    _renderSongInfo = () => {
+        const { load, songTitle, albumId, albumTitle, artistId, artistName } = this.state;
+        console.log(artistId)
+        if(load){
+            return(
+                <View>
+                    <Text>Song: {songTitle}</Text>
+                    <TouchableOpacity
+                        onPress={()=> this.props.navigation.navigate('AlbumScreen', {...this.state})}
+                    >
+                        <Text>Album: {albumTitle}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={()=> this.props.navigation.navigate('ArtistScreen', {...this.state})}
+                    >
+                        <Text>Artist: {artistName}</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        }else{
+            return(
+                <View>
+                    <Text>LOADING</Text>
+                </View>
+            )
+        }
     }
 
     _renderLyrics = () => {
         const { lyrics, load } = this.state;
-        console.log(lyrics)
-        
         if(load){
             return (
                 <Text style={styles.lyrics}>
@@ -64,9 +106,9 @@ export default class SongScreen extends Component {
         style={styles.container}
       >
         <Text style={styles.title}> SongScreen </Text>
+        {this._renderSongInfo()}
         <ScrollView
             style={styles.container}
-
         >
             {this._renderLyrics()}
         </ScrollView>
@@ -93,6 +135,5 @@ const styles = StyleSheet.create({
     },
     title: {
         flex: 1,
-
     },
 })

@@ -4,11 +4,10 @@ import { createAppContainer,
     createStackNavigator, 
     createDrawerNavigator } from 'react-navigation';
 import HomeScreen from '../screens/HomeScreen'
-// import BrowseScreen from '../screens/BrowseScreen'
-// import AlbumScreen from '../screens/AlbumScreen'
-// import ArtistScreen from '../screens/ArtistScreen'
+import BrowseScreen from '../screens/BrowseScreen'
+import AlbumScreen from '../screens/AlbumScreen'
+import ArtistScreen from '../screens/ArtistScreen'
 import SongScreen from '../screens/SongScreen'
-// import MainTabNavigator from './MainTabNavigator';
 
 const HomeStack = createStackNavigator(
   {
@@ -21,37 +20,38 @@ const HomeStack = createStackNavigator(
   }
 )
 
-// const BrowseStack = createStackNavigator(
-//   {
-//     BrowseScreen
-//   },
-//   {
-//     navigationOptions: {
+const BrowseStack = createStackNavigator(
+  {
+    BrowseScreen
+  },
+  {
+    navigationOptions: {
       
-//     }
-//   }
-// )
+    }
+  }
+)
 
-// const AlbumStack = createStackNavigator(
-//   {
-//     AlbumScreen
-//   },
-//   {
-//     navigationOptions: {
+const AlbumStack = createStackNavigator(
+  {
+    AlbumScreen
+  },
+  {
+    navigationOptions: {
       
-//     }
-//   }
-// )
-// const ArtistStack = createStackNavigator(
-//   {
-//     ArtistScreen
-//   },
-//   {
-//     navigationOptions: {
+    }
+  }
+)
+
+const ArtistStack = createStackNavigator(
+  {
+    ArtistScreen
+  },
+  {
+    navigationOptions: {
       
-//     }
-//   }
-// )
+    }
+  }
+)
 
 const SongStack = createStackNavigator(
   {
@@ -66,8 +66,8 @@ const SongStack = createStackNavigator(
 
 export default createAppContainer(createSwitchNavigator({
   HomeStack,
-  // BrowseStack,
-  // AlbumStack,
-  // ArtistStack,
+  BrowseStack,
+  AlbumStack,
+  ArtistStack,
   SongStack
 }));

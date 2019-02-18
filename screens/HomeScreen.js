@@ -39,7 +39,7 @@ class HomeScreen extends Component {
     //use throttle ? check cores ?
     _fetchInfo = () => {
         const { query, data } = this.state;
-        const url = `https://api.deezer.com/search?q=track:"${query}"&limit=3&order=RANKING?strict=on`;
+        const url = `https://api.deezer.com/search?q=${query}&limit=3&order=RANKING?strict=on`;
 
         fetch(url)
             .then(res => res.json())
@@ -48,7 +48,6 @@ class HomeScreen extends Component {
                     {
                     data: [...resJson.data]
                     }
-                    // this._loadInfo
                 )   
             })
     }
@@ -80,7 +79,10 @@ class HomeScreen extends Component {
                 />
                 <View>
                     <Text>
-                        {item.artist.name}
+                      {item.title}
+                    </Text>
+                    <Text>
+                      {item.artist.name}
                     </Text>
                 </View>
             </TouchableOpacity>
@@ -99,6 +101,7 @@ class HomeScreen extends Component {
             placeholder="Search Song ..."
             clearButtonMode="always"
             onChangeText={this._handleQuery}
+            // onPress={()=> navigation.navigate('BrowseScreen', {...query})}
 
         />
         <FlatList
@@ -131,7 +134,8 @@ const styles = StyleSheet.create({
 
     },
     suggestion: {
-        flex: 1
+        flex: 1,
+        flexDirection: 'row'
     },
     loadInfo: {
         flex:1,
