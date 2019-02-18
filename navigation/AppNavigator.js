@@ -7,7 +7,7 @@ import HomeScreen from '../screens/HomeScreen'
 // import BrowseScreen from '../screens/BrowseScreen'
 // import AlbumScreen from '../screens/AlbumScreen'
 // import ArtistScreen from '../screens/ArtistScreen'
-// import SongScreen from '../screens/SongScreen'
+import SongScreen from '../screens/SongScreen'
 // import MainTabNavigator from './MainTabNavigator';
 
 const HomeStack = createStackNavigator(
@@ -53,21 +53,21 @@ const HomeStack = createStackNavigator(
 //   }
 // )
 
-// const SongStack = createStackNavigator(
-//   {
-//     SongScreen
-//   },
-//   {
-//     navigationOptions: {
+const SongStack = createStackNavigator(
+  {
+    SongScreen
+  },
+  {
+    navigationOptions: {
       
-//     }
-//   }
-// )
+    }
+  }
+)
 
 export default createAppContainer(createSwitchNavigator({
   HomeStack,
   // BrowseStack,
   // AlbumStack,
   // ArtistStack,
-  // SongStack
+  SongStack
 }));

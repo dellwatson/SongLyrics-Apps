@@ -9,15 +9,12 @@ import {
     TextInput,
     FlatList,
     TouchableOpacity,
+    Button,
 
 
 } from 'react-native'
 import { Dimensions } from 'react-native';
-import window from '../constants/Layout'
-import { throttle, debounce } from 'throttle-debounce'
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
 class HomeScreen extends Component {
     state ={
         query: "",
@@ -71,11 +68,12 @@ class HomeScreen extends Component {
         Keyboard.dismiss()
     }
 
-    _Suggestion = ({ item }) => {
+    _Suggestion = ({ item,  }) => {
+        const { navigation } = this.props
         return (
             <TouchableOpacity
                 style={styles.suggestion}
-                // onPress={ () => navigation.navigate('SongScreen', {...item})}
+                onPress={ () => navigation.navigate('SongScreen', {...item})}
             >
                 <Image 
                 //    source={{ uri: }} 
@@ -86,13 +84,14 @@ class HomeScreen extends Component {
                     </Text>
                 </View>
             </TouchableOpacity>
-            )
+        )
     }
 
 
 
   render() {
       const { data, dataId, query } = this.state;
+      const { navigation } = this.props;
 
     return (
       <View style={styles.container}>
@@ -105,11 +104,13 @@ class HomeScreen extends Component {
         <FlatList
             data={data} 
             renderItem={this._Suggestion}
+            navigation={navigation}
             keyExtractor={(item, index) => index.toString()}
         />
-
-        <Text>window width: {window.width}</Text>
-        <Text>awindow height: {window.height}</Text>
+        <Button 
+            title="To Lyrics"
+            onPress={() => navigation.navigate('SongScreen')}
+        />
       </View>
     )
   }
