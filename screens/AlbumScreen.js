@@ -4,12 +4,25 @@ import { Text, StyleSheet, View,
  } from 'react-native'
 
 export default class AlbumScreen extends Component {
+  state = {
+
+  }
   componentDidMount(){
-    console.log(this.props.navigation.state.params)
+    // console.log(this.props.navigation.state.params.)
+    //fetch with album Id
+    //fetch and load image album
+    
   }
 
-  _fetchAlbumData = () =>{
-
+  _fetchAlbumData = (albumId) =>{
+    const url = `https://api.deezer.com/album/${albumId}`
+    fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          data: res.data
+        })
+      })
   }
 
   _renderAlbumInfo = () => {

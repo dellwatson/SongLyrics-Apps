@@ -21,7 +21,7 @@ export default class SongScreen extends Component {
         load: false
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         const { title, artist, album } = this.props.navigation.state.params;
         const url = `https://api.lyrics.ovh/v1/`
         const lyricsQuery = `${artist.name}/${title}`
@@ -70,6 +70,7 @@ export default class SongScreen extends Component {
                     <TouchableOpacity
                         onPress={()=> this.props.navigation.navigate('ArtistScreen', {...this.state})}
                     >
+                    {/* navigate stack */}
                         <Text>Artist: {artistName}</Text>
                     </TouchableOpacity>
                 </View>
@@ -106,7 +107,7 @@ export default class SongScreen extends Component {
         style={styles.container}
       >
         <Text style={styles.title}> SongScreen </Text>
-        {this._renderSongInfo()}
+            {this._renderSongInfo()}
         <ScrollView
             style={styles.container}
         >

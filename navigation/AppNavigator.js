@@ -31,8 +31,33 @@ const BrowseStack = createStackNavigator(
   }
 )
 
-const AlbumStack = createStackNavigator(
+// const AlbumStack = createStackNavigator(
+//   {
+//     AlbumScreen,
+//     ArtistScreen
+//   },
+//   {
+//     navigationOptions: {
+      
+//     }
+//   }
+// )
+
+// const ArtistStack = createStackNavigator(
+//   {
+//     ArtistScreen
+//   },
+//   {
+//     navigationOptions: {
+      
+//     }
+//   }
+// )
+
+const SongStack = createStackNavigator(
   {
+    SongScreen,
+    ArtistScreen,
     AlbumScreen
   },
   {
@@ -42,32 +67,7 @@ const AlbumStack = createStackNavigator(
   }
 )
 
-const ArtistStack = createStackNavigator(
-  {
-    ArtistScreen
-  },
-  {
-    navigationOptions: {
-      
-    }
-  }
-)
-
-const SongStack = createStackNavigator(
-  {
-    SongScreen
-  },
-  {
-    navigationOptions: {
-      
-    }
-  }
-)
-
 export default createAppContainer(createSwitchNavigator({
-  HomeStack,
-  BrowseStack,
-  AlbumStack,
-  ArtistStack,
-  SongStack
+  HomeScreen,
+  SongScreen
 }));

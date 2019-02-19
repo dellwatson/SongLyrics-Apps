@@ -5,7 +5,8 @@ import { Text, StyleSheet, View,
 
 export default class ArtistScreen extends Component {
   componentDidMount(){
-    console.log(this.props.navigation.state.params.artistId)
+    // console.log(this.props.navigation.state.params.artistId)
+    //fetch with artistId
   }
 
   _renderArtistInfo = () => {

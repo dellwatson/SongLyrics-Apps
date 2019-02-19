@@ -10,10 +10,15 @@ import {
     FlatList,
     TouchableOpacity,
     Button,
+    StatusBar
 
 
 } from 'react-native'
 import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get("window");
+const staticUri = "https://e-cdns-images.dzcdn.net/images/artist/0707267475580b1b82f4da20a1b295c6/250x250-000000-80-0-0.jpg"
+
 
 class HomeScreen extends Component {
     state ={
@@ -24,6 +29,7 @@ class HomeScreen extends Component {
     }
 
     componentDidMount(){
+        //load chart
     }
     
     _handleQuery = (text) => {
@@ -75,7 +81,7 @@ class HomeScreen extends Component {
                 onPress={ () => navigation.navigate('SongScreen', {...item})}
             >
                 <Image 
-                //    source={{ uri: }} 
+                   source={{ uri: staticUri}} 
                 />
                 <View>
                     <Text>
@@ -97,11 +103,13 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.container}>
+        <StatusBar  hidden />
         <TextInput
             placeholder="Search Song ..."
             clearButtonMode="always"
             onChangeText={this._handleQuery}
             // onPress={()=> navigation.navigate('BrowseScreen', {...query})}
+            //search icon pressed.
 
         />
         <FlatList
