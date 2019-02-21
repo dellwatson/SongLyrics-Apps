@@ -3,7 +3,12 @@ import { Text, StyleSheet, View,
     Button,
     ScrollView,
     TouchableOpacity,
+    Dimensions
  } from 'react-native'
+import colors from '../constants/Colors'
+// import window from '../constants/Layout'
+const { width, height } = Dimensions.get("window");
+
 
 export default class SongScreen extends Component {
     // static navigationOptions = ({ navigation }) => {
@@ -12,22 +17,22 @@ export default class SongScreen extends Component {
     //     }
     // }
     state = {
-        songTitle: '',
-        albumId:'',
-        albumTitle:'',
-        artistName:'',
-        artistId:'',
+        songTitle: 'Stranger Things',
+        albumId:'2321323',
+        albumTitle:'KYGO',
+        artistName:'kygo',
+        artistId:'2321323',
         lyrics: '',
         load: false
     }
 
     async componentDidMount(){
-        const { title, artist, album } = this.props.navigation.state.params;
-        const url = `https://api.lyrics.ovh/v1/`
-        const lyricsQuery = `${artist.name}/${title}`
+        // const { title, artist, album } = this.props.navigation.state.params;
+        const url = `https://api.lyrics.ovh/v1/kygo/stranger things`
+        // const lyricsQuery = `${url}${artist.name}/${title}`
         
-        this._saveState()
-        this._fetchLyrics(url+lyricsQuery)
+        // this._saveState()
+        this._fetchLyrics(url)
     }
 
     _saveState = () => {
@@ -60,19 +65,24 @@ export default class SongScreen extends Component {
         console.log(artistId)
         if(load){
             return(
-                <View>
-                    <Text>Song: {songTitle}</Text>
+                <View style={[styles.sizeContainer, styles.songInfo]}>
                     <TouchableOpacity
                         onPress={()=> this.props.navigation.navigate('AlbumScreen', {...this.state})}
                     >
+                    <View 
+                        style={{flexDirection:'row',alignSelf:'flex-end',}}
+                        >
+                        <Text>Song: {songTitle}</Text> 
+                    </View>
                         <Text>Album: {albumTitle}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={()=> this.props.navigation.navigate('ArtistScreen', {...this.state})}
                     >
                     {/* navigate stack */}
-                        <Text>Artist: {artistName}</Text>
+                    <Text>Artist: {artistName}</Text>
                     </TouchableOpacity>
+                    
                 </View>
             )
         }else{
@@ -103,21 +113,16 @@ export default class SongScreen extends Component {
 
   render() {
     return (
-      <View 
-        style={styles.container}
-      >
-        <Text style={styles.title}> SongScreen </Text>
+      <View style={styles.container}>
+        <View style={[styles.detailsContainer, styles.sizeContainer]}>
             {this._renderSongInfo()}
-        <ScrollView
-            style={styles.container}
-        >
-            {this._renderLyrics()}
-        </ScrollView>
-
-        <Button 
-            title="To Home"
-            onPress={() => this.props.navigation.navigate('HomeScreen')}
-        />
+        </View>
+        {/* bikin arrowny disni, height nya sama dengan, di tempel */}
+        <View>
+            <ScrollView >
+                {this._renderLyrics()}
+            </ScrollView>
+        </View>
       </View>
     )
   }
@@ -126,15 +131,25 @@ export default class SongScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 30,
-        
+        alignItems: 'center'
+    },
+    sizeContainer: {
+        width: width,
+        height: height* 0.60,
+    },
+    songInfo:{
+        justifyContent:'space-around', 
+        alignItems:'center',
+
+    },
+    detailsContainer:{
+        backgroundColor: colors.lBlue,
+        borderBottomRightRadius: 50,
+        borderBottomStartRadius: 50,
     },
     lyrics: {
-        flex:1,
         justifyContent: 'center',
         alignItems: 'center'
     },
-    title: {
-        flex: 1,
-    },
+    
 })

@@ -10,13 +10,14 @@ import {
     FlatList,
     TouchableOpacity,
     Button,
-    StatusBar
-
-
+    ScrollView,
+    
 } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
-
+import colors from '../constants/Colors'
 const { width, height } = Dimensions.get("window");
+
 const staticUri = "https://e-cdns-images.dzcdn.net/images/artist/0707267475580b1b82f4da20a1b295c6/250x250-000000-80-0-0.jpg"
 
 
@@ -25,7 +26,6 @@ class HomeScreen extends Component {
         query: "",
         data: [],
         dataId: []
-
     }
 
     componentDidMount(){
@@ -45,7 +45,7 @@ class HomeScreen extends Component {
     //use throttle ? check cores ?
     _fetchInfo = () => {
         const { query, data } = this.state;
-        const url = `https://api.deezer.com/search?q=${query}&limit=3&order=RANKING?strict=on`;
+        const url = `https://api.deezer.com/search?q=${query}&limit=10&order=RANKING?strict=on`;
 
         fetch(url)
             .then(res => res.json())
@@ -80,22 +80,31 @@ class HomeScreen extends Component {
                 style={styles.suggestion}
                 onPress={ () => navigation.navigate('SongScreen', {...item})}
             >
-                <Image 
+                {/* <Image 
                    source={{ uri: staticUri}} 
-                />
-                <View>
-                    <Text>
-                      {item.title}
+                /> */}
+              
+                    <Text style={{backgroundColor:'#1B1D43', color:'white'}}>
+                        {item.title} {item.artist.name}
                     </Text>
-                    <Text>
-                      {item.artist.name}
+                    <Text style={{backgroundColor:'#1B1D43',}}>
+                        {item.title} {item.artist.name}
                     </Text>
-                </View>
             </TouchableOpacity>
         )
     }
 
-
+    _renderSuggestion = () => {
+        const { data, dataId, query } = this.state;
+      const { navigation } = this.props;
+        return <FlatList
+            style={styles.renderSuggestion}
+            data={data} 
+            renderItem={this._Suggestion}
+            navigation={navigation}
+            keyExtractor={(item, index) => index.toString()}
+            />
+    }
 
   render() {
       const { data, dataId, query } = this.state;
@@ -103,50 +112,112 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <StatusBar  hidden />
-        <TextInput
-            placeholder="Search Song ..."
-            clearButtonMode="always"
-            onChangeText={this._handleQuery}
-            // onPress={()=> navigation.navigate('BrowseScreen', {...query})}
-            //search icon pressed.
+        {/* <StatusBar hidden /> */}
+        <View style={styles.searchBar}>
+            <TextInput
+                style={{color:'black' , fontSize: 18 }}
+                placeholder="Search Song ... "
+                placeholderTextColor= 'black'
+                clearButtonMode="always"
+                onChangeText={this._handleQuery}
+                clearButtonMode="always"
+                // onPress={()=> navigation.navigate('BrowseScreen', {...query})}
+                //search icon pressed.
 
-        />
-        <FlatList
-            data={data} 
-            renderItem={this._Suggestion}
-            navigation={navigation}
-            keyExtractor={(item, index) => index.toString()}
-        />
-        <Button 
+            />
+            <Ionicons style={{color: colors.pink,}} size={26} name='md-search'/>
+        </View>
+        {query ? this._renderSuggestion(): null}
+
+        {/* {this._renderSuggestion()} */}
+        <View style={styles.imageContainer}>
+            <Image 
+                source={{uri: staticUri}}
+                style={styles.image}
+            />
+        </View>
+
+        {/* <Button 
             title="To Lyrics"
             onPress={() => navigation.navigate('SongScreen')}
-        />
+        /> */}
       </View>
     )
   }
+
 }
 
 //  styles
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        paddingTop:20,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        // borderColor: 'black',
+        // borderWidth: 3,
+        backgroundColor: colors.warmWhite
+    },
+    font: {
+        // fontFamily: 'Menlo',
+        fontSize: 36,
+        fontWeight: "900"
+    },
+    searchBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        top: height* 0.05,
+        width: width* 0.75,
+        height: 50,
+        backgroundColor: colors.white,
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderRadius: 20,
+        borderWidth: 0.2,
+        borderColor: '#ddd',
+        borderBottomWidth: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        // elevation: 0.3,
+    },
+    renderSuggestion:{
+        top: height* 0.05,
+    },
+    suggestion: {
+        width: width* 0.75,
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
         justifyContent: 'center',
-        alignItems: 'center'
+        backgroundColor:'green'
+    },
+    imageContainer:{
+        // bottom: height* 0.10,
+        // top: height* 0.2,
+        // justifyContent: 'flex-end',
+        // backgroundColor: '#FFFFFF',
+        // borderColor: '#131637',
+        // borderWidth: 3,
+        width,
+        height: width* 0.85,
+        alignItems: 'center',
+        justifyContent:'center',
+    },
+    image: {
+        
+        width: width/ 2,
+        height: width* 0.50,
+        // resizeMode: 'contain'
+        borderRadius: 20,
     },
     text: {
-        flex:1,
         justifyContent: 'center',
         alignItems: 'center'
 
     },
-    suggestion: {
-        flex: 1,
-        flexDirection: 'row'
-    },
+   
     loadInfo: {
-        flex:1,
         // justifyContent: 'center',
         // alignItems: 'center'
     },

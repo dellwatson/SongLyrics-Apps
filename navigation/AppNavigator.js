@@ -5,8 +5,8 @@ import { createAppContainer,
     createDrawerNavigator } from 'react-navigation';
 import HomeScreen from '../screens/HomeScreen'
 import BrowseScreen from '../screens/BrowseScreen'
-import AlbumScreen from '../screens/AlbumScreen'
-import ArtistScreen from '../screens/ArtistScreen'
+// import AlbumScreen from '../screens/AlbumScreen'
+// import ArtistScreen from '../screens/ArtistScreen'
 import SongScreen from '../screens/SongScreen'
 
 const HomeStack = createStackNavigator(
@@ -57,8 +57,6 @@ const BrowseStack = createStackNavigator(
 const SongStack = createStackNavigator(
   {
     SongScreen,
-    ArtistScreen,
-    AlbumScreen
   },
   {
     navigationOptions: {
@@ -68,6 +66,6 @@ const SongStack = createStackNavigator(
 )
 
 export default createAppContainer(createSwitchNavigator({
-  HomeScreen,
+  // HomeScreen,
   SongScreen
 }));
