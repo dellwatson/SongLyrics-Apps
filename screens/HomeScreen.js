@@ -137,10 +137,10 @@ class HomeScreen extends Component {
             />
         </View>
 
-        {/* <Button 
+        <Button 
             title="To Lyrics"
             onPress={() => navigation.navigate('SongScreen')}
-        /> */}
+        />
       </View>
     )
   }

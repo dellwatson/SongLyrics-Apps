@@ -8,17 +8,19 @@ import BrowseScreen from '../screens/BrowseScreen'
 // import AlbumScreen from '../screens/AlbumScreen'
 // import ArtistScreen from '../screens/ArtistScreen'
 import SongScreen from '../screens/SongScreen'
+import { create } from 'uuid-js';
 
-const HomeStack = createStackNavigator(
+export default createAppContainer(createStackNavigator(
   {
-    HomeScreen
+    // HomeScreen,
+    SongScreen
   },
   {
     navigationOptions: {
 
     }
   }
-)
+))
 
 const BrowseStack = createStackNavigator(
   {
@@ -61,11 +63,15 @@ const SongStack = createStackNavigator(
   {
     navigationOptions: {
       
+      // header:null
+      // headerTransparent: true
     }
   }
 )
 
-export default createAppContainer(createSwitchNavigator({
-  // HomeScreen,
-  SongScreen
-}));
+// export default createAppContainer(createSwitchNavigator({
+//   // HomeScreen,
+//   // SongStack
+// }));
+
+// export default createAppContainer(HomeStack)
