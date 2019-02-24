@@ -211,7 +211,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 20,
         fontWeight: "300"
-
     },
     
 })

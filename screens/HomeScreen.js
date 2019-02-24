@@ -11,9 +11,10 @@ import {
     TouchableOpacity,
     Button,
     ScrollView,
+    Animated
     
 } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 import colors from '../constants/Colors'
 const { width, height } = Dimensions.get("window");
@@ -22,10 +23,17 @@ const staticUri = "https://e-cdns-images.dzcdn.net/images/artist/0707267475580b1
 
 
 class HomeScreen extends Component {
+    static navigationOptions = ({ navigation }) => {
+        return {
+            header: null
+        }
+    }
+
     state ={
         query: "",
         data: [],
-        dataId: []
+        dataId: [],
+        scrollData: [staticUri, staticUri,staticUri]
     }
 
     componentDidMount(){
@@ -39,7 +47,6 @@ class HomeScreen extends Component {
         this._fetchInfo
             // this._loadInfo
         )
-        //straight to change the API instead of state.query? 
     }
 
     //use throttle ? check cores ?
@@ -80,16 +87,13 @@ class HomeScreen extends Component {
                 style={styles.suggestion}
                 onPress={ () => navigation.navigate('SongScreen', {...item})}
             >
-                {/* <Image 
+                <Image 
                    source={{ uri: staticUri}} 
-                /> */}
-              
-                    <Text style={{backgroundColor:'#1B1D43', color:'white'}}>
-                        {item.title} {item.artist.name}
-                    </Text>
-                    <Text style={{backgroundColor:'#1B1D43',}}>
-                        {item.title} {item.artist.name}
-                    </Text>
+                   style={{width:width*0.08, height:width*0.08, borderRadius:40}}
+                />
+                <Text style={{backgroundColor:'#1B1D43', color:'white'}}>
+                    {item.title} {item.artist.name}
+                </Text>
             </TouchableOpacity>
         )
     }
@@ -97,13 +101,16 @@ class HomeScreen extends Component {
     _renderSuggestion = () => {
         const { data, dataId, query } = this.state;
       const { navigation } = this.props;
-        return <FlatList
-            style={styles.renderSuggestion}
-            data={data} 
-            renderItem={this._Suggestion}
-            navigation={navigation}
-            keyExtractor={(item, index) => index.toString()}
+        return (
+            <FlatList
+            // style={styles.renderSuggestion}
+                // contentContainerStyle
+                data={data} 
+                renderItem={this._Suggestion}
+                navigation={navigation}
+                keyExtractor={(item, index) => index.toString()}
             />
+        )
     }
 
   render() {
@@ -113,35 +120,74 @@ class HomeScreen extends Component {
     return (
       <View style={styles.container}>
         {/* <StatusBar hidden /> */}
-        <View style={styles.searchBar}>
-            <TextInput
-                style={{color:'black' , fontSize: 18 }}
-                placeholder="Search Song ... "
-                placeholderTextColor= 'black'
-                clearButtonMode="always"
-                onChangeText={this._handleQuery}
-                clearButtonMode="always"
-                // onPress={()=> navigation.navigate('BrowseScreen', {...query})}
-                //search icon pressed.
 
-            />
-            <Ionicons style={{color: colors.pink,}} size={26} name='md-search'/>
-        </View>
-        {query ? this._renderSuggestion(): null}
 
-        {/* {this._renderSuggestion()} */}
-        <View style={styles.imageContainer}>
-            <Image 
-                source={{uri: staticUri}}
-                style={styles.image}
-            />
+        <View style={styles.headerContainer}>
+            <Text>Header</Text>
+            <AntDesign size={26} name='questioncircleo'/>
         </View>
 
-        <Button 
-            title="To Lyrics"
-            onPress={() => navigation.navigate('SongScreen')}
-        />
+
+        <View style={styles.searchContainer}>
+            <View style={styles.searchBar}>
+                <TextInput
+                    style={{color:'black' , fontSize: 18 }}
+                    placeholder="Search Song ... "
+                    // placeholderTextColor= 'black'
+                    clearButtonMode="always"
+                    onChangeText={this._handleQuery}
+                    clearButtonMode="always"
+                    // onPress={()=> navigation.navigate('BrowseScreen', {...query})}
+                    //search icon pressed.
+                />
+                <AntDesign style={{color: colors.pink,}} size={26} name='search1'/>
+            </View>
+        </View>
+
+        <View style={{justifyContent:'center', alignItems:'center'}}>
+            {query ? this._renderSuggestion(): null}
+        </View>
+        <View style={styles.chartsContainer}>
+            <Text>TOP CHARTS</Text>
+        </View>
+        {query ? null : this._renderImageContainer()}
       </View>
+    )
+  }
+
+  _renderImageContainer = () => {
+      _scrollX = new Animated.Value(0)
+      return (
+        <View style={styles.imageContainer}>
+            <ScrollView
+                horizontal
+                pagingEnabled
+                scrollEventThrottle={16}
+                onScroll={Animated.event()}
+            >
+            {this.state.scrollData.map((item, index) => this._renderItemScroll(item, index))}
+            {/* {exclude bar} */}
+            </ScrollView>
+        </View>
+      )
+  }
+
+  _renderItemScroll = (item, index) => {
+    return (
+        <View key={index} >
+            <View style={styles.imageScroll}>
+                <Image 
+                    source={{uri: staticUri}}
+                    style={styles.image}
+                />
+                <View>
+                    <Text>Bar</Text>
+                </View>
+            </View>
+            <View style={styles.chartSongTitle}>
+                <Text>SongName zindex</Text>
+            </View>
+        </View>
     )
   }
 
@@ -151,22 +197,30 @@ class HomeScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        // borderColor: 'black',
-        // borderWidth: 3,
+        flexDirection:'column',
+        alignItems: 'stretch',
         backgroundColor: colors.warmWhite
     },
-    font: {
-        // fontFamily: 'Menlo',
-        fontSize: 36,
-        fontWeight: "900"
+    headerContainer:{
+        flex:1,
+        // backgroundColor: 'red',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 25,
+    },
+    ////
+    searchContainer: {
+        flex:1.8,
+        // backgroundColor: 'green',
+        justifyContent: 'center',
+        alignItems: 'center'
+
     },
     searchBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        top: height* 0.05,
         width: width* 0.75,
         height: 50,
         backgroundColor: colors.white,
@@ -182,28 +236,56 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         // elevation: 0.3,
     },
-    renderSuggestion:{
-        top: height* 0.05,
+    ////
+
+    chartsContainer: {
+        flex:1,
+        // backgroundColor: 'grey',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    ////
+
+    imageContainer: {
+        flex:4,
+        // backgroundColor: 'blue',
+        justifyContent: 'center',
+        alignItems:'center'
+    },
+
+    imageScroll: {
+        flex:9,
+        width,
+        alignItems: 'center',
+        justifyContent: 'space-around'
+    },
+
+    chartSongTitle: {
+        flex:1,
+        zIndex: 100,
+        // right:width* 0.25,
+        bottom:height*0.2
+    },
+
+    ////
+    font: {
+        // fontFamily: 'Menlo',
+        fontSize: 36,
+        fontWeight: "900"
+    },
+    //
+    containerSuggestion: {
+        justifyContent:'center',
+        backgroundColor:'green',
     },
     suggestion: {
         width: width* 0.75,
         flexDirection: 'row',
         flexWrap: 'nowrap',
-        justifyContent: 'center',
-        backgroundColor:'green'
-    },
-    imageContainer:{
-        // bottom: height* 0.10,
-        // top: height* 0.2,
-        // justifyContent: 'flex-end',
-        // backgroundColor: '#FFFFFF',
-        // borderColor: '#131637',
-        // borderWidth: 3,
-        width,
-        height: width* 0.85,
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        justifyContent:'center',
     },
+    //
     image: {
         
         width: width/ 2,
@@ -214,7 +296,6 @@ const styles = StyleSheet.create({
     text: {
         justifyContent: 'center',
         alignItems: 'center'
-
     },
    
     loadInfo: {

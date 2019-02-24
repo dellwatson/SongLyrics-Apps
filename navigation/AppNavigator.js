@@ -12,8 +12,8 @@ import { create } from 'uuid-js';
 
 export default createAppContainer(createStackNavigator(
   {
-    // HomeScreen,
-    SongScreen
+    HomeScreen,
+    // SongScreen
   },
   {
     navigationOptions: {
