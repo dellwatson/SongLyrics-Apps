@@ -5,21 +5,15 @@ import {
     StyleSheet,
     Image,
     Keyboard,
-    StatusBar,
     TextInput,
     FlatList,
     TouchableOpacity,
-    Button,
-    ScrollView,
-    Animated
     
 } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 import colors from '../constants/Colors'
 const { width, height } = Dimensions.get("window");
-
-const staticUri = "https://e-cdns-images.dzcdn.net/images/artist/0707267475580b1b82f4da20a1b295c6/250x250-000000-80-0-0.jpg"
 
 
 class HomeScreen extends Component {
@@ -59,18 +53,10 @@ class HomeScreen extends Component {
             .then((resJson) => {
                 this.setState(
                     {
-                    data: resJson.data
+                        data: resJson.data
                     }
                 )   
             })
-    }
-
-    _loadInfo = () => {
-        const { data, dataId, query } = this.state;
-        console.log(query)
-        // data.map((item) => {
-        //     console.log(item.id)
-        // })
     }
 
     clearQuery = () => {
@@ -88,7 +74,7 @@ class HomeScreen extends Component {
                 onPress={ () => navigation.navigate('SongScreen', {...item})}
             >
                 <Image 
-                   source={{ uri: staticUri}} 
+                   source={{uri: item.artist.picture_small}} 
                    style={{width:width*0.08, height:width*0.08, borderRadius:40}}
                 />
                 <Text style={{backgroundColor:'#1B1D43', color:'white'}}>
@@ -100,14 +86,14 @@ class HomeScreen extends Component {
 
     _renderSuggestion = () => {
         const { data, dataId, query } = this.state;
-      const { navigation } = this.props;
+    //   const { navigation } = this.props;
         return (
             <FlatList
                 // style={styles.renderSuggestion}
                 // contentContainerStyle
                 data={data} 
                 renderItem={this._Suggestion}
-                navigation={navigation}
+                // navigation={navigation}
                 keyExtractor={(item, index) => index.toString()}
             />
         )
@@ -118,14 +104,11 @@ class HomeScreen extends Component {
       const { navigation } = this.props;
 
     return (
-      <View style={styles.container}>
-        {/* <StatusBar hidden /> */}
-
+      <TouchableOpacity style={styles.container} onPress={this.clearQuery} >
         <View style={styles.headerContainer}>
             <Text>Header</Text>
             <AntDesign size={26} name='questioncircleo'/>
         </View>
-
 
         <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
@@ -149,89 +132,22 @@ class HomeScreen extends Component {
         <View style={styles.chartsContainer}>
             <Text>TOP CHARTS</Text>
         </View>
-        {query ? null : this._renderImageContainer()}
-      </View>
+        {query ? null : this._renderChartListContainer()}
+      </TouchableOpacity>
     )
   }
 
-  _renderImageContainer = () => {
-        _scrollX = new Animated.Value(0)
-
-      console.log(_scrollX)
+  _renderChartListContainer = () => {
       return (
         <View style={styles.imageContainer}>
-            <Animated.ScrollView
-                contentContainerStyle={{alignItems:'center'}}
-                horizontal
-                pagingEnabled
-                scrollEventThrottle={16}
-                onScroll={Animated.event(
-                    [{
-                        nativeEvent: {
-                            contentOffset: {
-                                x: _scrollX
-                            }
-                        }
-                    }],
-                    {
-                        useNativeDriver: true
-                    }
-                )}
-            >
-            {this.state.scrollData.map((item, index) => this._renderItemScroll(item, index, _scrollX))}
-            {/* {exclude bar} */}
-            </Animated.ScrollView>
+
         </View>
       )
   }
 
-  _renderItemScroll = (item, index, _scrollX) => {
-    console.log(_scrollX)
-    const inputRange =[
-        (index - 2) * width,
-        (index - 1) * width,
-        index * width,
-        (index + 1) * width
-    ];
+  _renderItemCharts = () => {
 
-    const ImageScale = _scrollX.interpolate({
-        inputRange,
-        outputRange: [1, 0.4, 1, 0.4 ]
-    })
-
-    const imageOpacity = _scrollX.interpolate({
-        inputRange,
-        outputRange: [1, 0.2, 1 , 0.2]
-    })    
-    return (
-        <View key={index} >
-            <View style={styles.imageScroll}>
-                <Animated.Image 
-                    source={{uri: staticUri}}
-                    style={
-                        [
-                            styles.image,
-                            {transform: [{ scale: ImageScale }]}
-                        ]
-                    }
-                />
-                <View>
-                    <Text>Bar</Text>
-                </View>
-            </View>
-            <Animated.View style={
-                [
-                    styles.chartSongTitle,
-                    {opacity: imageOpacity}
-                ]
-            }
-            >
-                <Text>SongName zindex</Text>
-            </Animated.View>
-        </View>
-    )
   }
-
 }
 
 //  styles
@@ -286,6 +202,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     ////
+
+
+
+
 
     imageContainer: {
         flex:4,
