@@ -21,7 +21,6 @@ export default class SongScreen extends Component {
 
 
     state = {
-        fontLoaded  : false,
         lyricsLoaded: false,
         renderingInfo: false,
         lyrics: '',
@@ -29,12 +28,6 @@ export default class SongScreen extends Component {
 
      async componentDidMount(){
         const { title, artist } = this.props.navigation.state.params;
-        await Font.loadAsync({
-            'Forum': require('../assets/fonts/Forum/Forum-Regular.ttf'),
-            'Patua': require('../assets/fonts/Patua_One/PatuaOne-Regular.ttf'),
-        })
-        this.setState({ fontLoaded: true })
-
         const url = `https://api.lyrics.ovh/v1/${artist.name}/${title}`
         this._fetchLyrics(url)
     }
@@ -51,9 +44,9 @@ export default class SongScreen extends Component {
     }
 
     _renderSongInfo = () => {
-        const { lyricsLoaded, fontLoaded } = this.state;
+        const { lyricsLoaded,  } = this.state;
         const { artist, album } = this.props.navigation.state.params;
-        if(lyricsLoaded && fontLoaded){
+        if(lyricsLoaded ){
             return(
                 <View style={[styles.sizeContainer,]}>
                     <View style={{width:width*0.5, justifyContent:'center', alignItems:'center'}}>
@@ -83,10 +76,10 @@ export default class SongScreen extends Component {
     }
 
     _renderTitle = () => {
-        const { lyricsLoaded, fontLoaded } = this.state;
+        const { lyricsLoaded,  } = this.state;
         const { title } = this.props.navigation.state.params;
         
-        if(lyricsLoaded && fontLoaded){
+        if(lyricsLoaded ){
             return (
                 <View style={styles.titleContainer}>
                     <Text style={{fontFamily:'Forum', fontSize:30, color: colors.white, fontWeight:'500'}}>{title}</Text>
@@ -96,8 +89,8 @@ export default class SongScreen extends Component {
       }
 
     _renderLyrics = () => {
-        const { lyrics, lyricsLoaded, fontLoaded } = this.state;
-        if(lyricsLoaded && fontLoaded){
+        const { lyrics, lyricsLoaded,  } = this.state;
+        if(lyricsLoaded ){
             return (
                 <Text style={styles.lyrics}>
                     {lyrics}

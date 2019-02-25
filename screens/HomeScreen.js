@@ -217,6 +217,7 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     text: {
+        fontFamily:'Forum',
         justifyContent: 'center',
         alignItems: 'center',
         color:colors.white
