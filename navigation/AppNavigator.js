@@ -10,7 +10,8 @@ import SongScreen from '../screens/SongScreen'
 export default createAppContainer(createStackNavigator(
   {
     HomeScreen,
-    SongScreen
+    SongScreen,
+    BrowseScreen
   },
   {
     navigationOptions: {
@@ -19,30 +20,28 @@ export default createAppContainer(createStackNavigator(
   }
 ))
 
-const BrowseStack = createStackNavigator(
-  {
-    BrowseScreen
-  },
-  {
-    navigationOptions: {
+// const BrowseStack = createStackNavigator(
+//   {
+//     BrowseScreen
+//   },
+//   {
+//     navigationOptions: {
       
-    }
-  }
-)
+//     }
+//   }
+// )
 
 
-const SongStack = createStackNavigator(
-  {
-    SongScreen,
-  },
-  {
-    navigationOptions: {
+// const SongStack = createStackNavigator(
+//   {
+//     SongScreen,
+//   },
+//   {
+//     navigationOptions: {
       
-      // header:null
-      // headerTransparent: true
-    }
-  }
-)
+//     }
+//   }
+// )
 
 // export default createAppContainer(createSwitchNavigator({
 //   // HomeScreen,

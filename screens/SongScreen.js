@@ -129,7 +129,7 @@ export default class SongScreen extends Component {
                     name='arrow-back' />
                 <AntDesign 
                     // onPress
-                    style={{color: colors.white,}} 
+                    style={{color: colors.lBlue,}} 
                     size={26} 
                     name='search1'/>
             </View>
