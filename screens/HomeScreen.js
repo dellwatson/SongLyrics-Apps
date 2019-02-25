@@ -33,7 +33,7 @@ class HomeScreen extends Component {
         query: "",
         data: [],
         dataId: [],
-        scrollData: [staticUri, staticUri,staticUri]
+        // scrollData: [staticUri, staticUri,staticUri]
     }
 
     componentDidMount(){
@@ -49,7 +49,7 @@ class HomeScreen extends Component {
         )
     }
 
-    //use throttle ? check cores ?
+    // use throttle ? check cores ?
     _fetchInfo = () => {
         const { query, data } = this.state;
         const url = `https://api.deezer.com/search?q=${query}&limit=10&order=RANKING?strict=on`;
@@ -59,7 +59,7 @@ class HomeScreen extends Component {
             .then((resJson) => {
                 this.setState(
                     {
-                    data: [...resJson.data]
+                    data: resJson.data
                     }
                 )   
             })
@@ -103,7 +103,7 @@ class HomeScreen extends Component {
       const { navigation } = this.props;
         return (
             <FlatList
-            // style={styles.renderSuggestion}
+                // style={styles.renderSuggestion}
                 // contentContainerStyle
                 data={data} 
                 renderItem={this._Suggestion}
@@ -120,7 +120,6 @@ class HomeScreen extends Component {
     return (
       <View style={styles.container}>
         {/* <StatusBar hidden /> */}
-
 
         <View style={styles.headerContainer}>
             <Text>Header</Text>
@@ -156,37 +155,79 @@ class HomeScreen extends Component {
   }
 
   _renderImageContainer = () => {
-      _scrollX = new Animated.Value(0)
+        _scrollX = new Animated.Value(0)
+
+      console.log(_scrollX)
       return (
         <View style={styles.imageContainer}>
-            <ScrollView
+            <Animated.ScrollView
+                contentContainerStyle={{alignItems:'center'}}
                 horizontal
                 pagingEnabled
                 scrollEventThrottle={16}
-                onScroll={Animated.event()}
+                onScroll={Animated.event(
+                    [{
+                        nativeEvent: {
+                            contentOffset: {
+                                x: _scrollX
+                            }
+                        }
+                    }],
+                    {
+                        useNativeDriver: true
+                    }
+                )}
             >
-            {this.state.scrollData.map((item, index) => this._renderItemScroll(item, index))}
+            {this.state.scrollData.map((item, index) => this._renderItemScroll(item, index, _scrollX))}
             {/* {exclude bar} */}
-            </ScrollView>
+            </Animated.ScrollView>
         </View>
       )
   }
 
-  _renderItemScroll = (item, index) => {
+  _renderItemScroll = (item, index, _scrollX) => {
+    console.log(_scrollX)
+    const inputRange =[
+        (index - 2) * width,
+        (index - 1) * width,
+        index * width,
+        (index + 1) * width
+    ];
+
+    const ImageScale = _scrollX.interpolate({
+        inputRange,
+        outputRange: [1, 0.4, 1, 0.4 ]
+    })
+
+    const imageOpacity = _scrollX.interpolate({
+        inputRange,
+        outputRange: [1, 0.2, 1 , 0.2]
+    })    
     return (
         <View key={index} >
             <View style={styles.imageScroll}>
-                <Image 
+                <Animated.Image 
                     source={{uri: staticUri}}
-                    style={styles.image}
+                    style={
+                        [
+                            styles.image,
+                            {transform: [{ scale: ImageScale }]}
+                        ]
+                    }
                 />
                 <View>
                     <Text>Bar</Text>
                 </View>
             </View>
-            <View style={styles.chartSongTitle}>
+            <Animated.View style={
+                [
+                    styles.chartSongTitle,
+                    {opacity: imageOpacity}
+                ]
+            }
+            >
                 <Text>SongName zindex</Text>
-            </View>
+            </Animated.View>
         </View>
     )
   }
@@ -255,7 +296,7 @@ const styles = StyleSheet.create({
 
     imageScroll: {
         flex:9,
-        width,
+        // width: width,
         alignItems: 'center',
         justifyContent: 'space-around'
     },
