@@ -19,9 +19,11 @@ export default class SongScreen extends Component {
         }
     }
 
+
     state = {
         fontLoaded  : false,
         lyricsLoaded: false,
+        renderingInfo: false,
         lyrics: '',
     }
 
@@ -106,20 +108,36 @@ export default class SongScreen extends Component {
         }
     }
 
+    popInfo = () => {
+        const { renderingInfo } = this.state
+        this.setState({
+            renderingInfo: !renderingInfo
+        })
+        //willmount
+    }
+
   render() {
     return (
       <View style={styles.container}>
         {/* <StatusBar hidden/> */}
         <View style={[styles.detailsContainer,]}>
             <View style={styles.detailsIcon}> 
-                <MaterialIcons style={{color: colors.white,}} size={26} name='dashboard' />
-                <AntDesign style={{color: colors.white,}} size={26} name='search1'/>
+                <MaterialIcons 
+                    onPress={() => this.props.navigation.goBack()}
+                    style={{color: colors.white,}} 
+                    size={26} 
+                    name='arrow-back' />
+                <AntDesign 
+                    // onPress
+                    style={{color: colors.white,}} 
+                    size={26} 
+                    name='search1'/>
             </View>
-            {/* {this._renderSongInfo()} */}
+            {this.state.renderingInfo? this._renderSongInfo() : null}
             {this._renderTitle()}
             <View 
+                onPress={this.popInfo}
                 style={styles.gridIcon}
-                // onPress
             ></View>
         </View>
 
@@ -142,7 +160,8 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 50,
         borderBottomStartRadius: 50,
         width,
-        paddingBottom: 10
+        paddingBottom: 10,
+        paddingTop:10,
 
     },
     detailsIcon: {

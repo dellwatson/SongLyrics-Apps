@@ -8,7 +8,7 @@ import {
     TextInput,
     FlatList,
     TouchableOpacity,
-    
+    Linking
 } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -27,23 +27,16 @@ class HomeScreen extends Component {
         query: "",
         data: [],
         dataId: [],
-        // scrollData: [staticUri, staticUri,staticUri]
     }
 
-    componentDidMount(){
-        //load chart
-    }
-    
     _handleQuery = (text) => {
         this.setState({
             query: text
         },
         this._fetchInfo
-            // this._loadInfo
         )
     }
 
-    // use throttle ? check cores ?
     _fetchInfo = () => {
         const { query, data } = this.state;
         const url = `https://api.deezer.com/search?q=${query}&limit=10&order=RANKING?strict=on`;
@@ -53,16 +46,16 @@ class HomeScreen extends Component {
             .then((resJson) => {
                 this.setState(
                     {
-                        data: resJson.data
+                        data: resJson.data,
                     }
                 )   
             })
     }
 
     clearQuery = () => {
-        this.setState({
-            text: '',
-        });
+        // this.setState({
+        //     query: '',
+        // });
         Keyboard.dismiss()
     }
 
@@ -75,9 +68,11 @@ class HomeScreen extends Component {
             >
                 <Image 
                    source={{uri: item.artist.picture_small}} 
-                   style={{width:width*0.08, height:width*0.08, borderRadius:40}}
+                   style={{width:width*0.08, height:width*0.08, borderRadius:40, marginRight:5}}
                 />
-                <Text style={{backgroundColor:'#1B1D43', color:'white'}}>
+                <Text
+                    //  style={{backgroundColor:'#1B1D43', color:'white'}}
+                    >
                     {item.title} {item.artist.name}
                 </Text>
             </TouchableOpacity>
@@ -85,29 +80,46 @@ class HomeScreen extends Component {
     }
 
     _renderSuggestion = () => {
-        const { data, dataId, query } = this.state;
-    //   const { navigation } = this.props;
+        const { data, } = this.state;
         return (
             <FlatList
-                // style={styles.renderSuggestion}
-                // contentContainerStyle
                 data={data} 
                 renderItem={this._Suggestion}
-                // navigation={navigation}
                 keyExtractor={(item, index) => index.toString()}
             />
         )
     }
 
   render() {
-      const { data, dataId, query } = this.state;
-      const { navigation } = this.props;
+      const { data, dataId, query, } = this.state;
 
     return (
       <TouchableOpacity style={styles.container} onPress={this.clearQuery} >
-        <View style={styles.headerContainer}>
-            <Text>Header</Text>
-            <AntDesign size={26} name='questioncircleo'/>
+        <View style={[styles.headerContainer, ]}>
+            <View style={{paddingLeft: 35}}>
+                <Text> Find The Lyrics v.1.0 </Text>
+            </View>
+            <View style={{
+                    width:width*.35, 
+                    height: 40, 
+                    backgroundColor:colors.lBlue, 
+                    borderTopLeftRadius: 20, 
+                    borderBottomLeftRadius:20,
+                    flexDirection:'row',
+                    alignItems:'center',
+                    justifyContent:'space-evenly'
+                    }}>
+                <AntDesign 
+                    onPress={()=> Linking.openURL('http://www.instagram.com/dellwatson')}
+                    style={{color:'grey'}} 
+                    size={20} 
+                    name='instagram'/>
+                <AntDesign 
+                    onPress={()=> Linking.openURL('http://www.github.com/dellwatson')}
+                    style={{color:'grey'}} 
+                    size={20} 
+                    name='github'/>
+            </View>
         </View>
 
         <View style={styles.searchContainer}>
@@ -115,38 +127,33 @@ class HomeScreen extends Component {
                 <TextInput
                     style={{color:'black' , fontSize: 18 }}
                     placeholder="Search Song ... "
-                    // placeholderTextColor= 'black'
                     clearButtonMode="always"
                     onChangeText={this._handleQuery}
-                    clearButtonMode="always"
-                    // onPress={()=> navigation.navigate('BrowseScreen', {...query})}
-                    //search icon pressed.
                 />
-                <AntDesign style={{color: colors.pink,}} size={26} name='search1'/>
+                <AntDesign 
+                    // onPress={()=> navigation.navigate('BrowseScreen', {...query})}
+                    style={{color: colors.pink,}} 
+                    size={26} name='search1'/>
             </View>
         </View>
 
-        <View style={{justifyContent:'center', alignItems:'center'}}>
+        <View style={{justifyContent:'flex-start', alignItems:'center'}}>
             {query ? this._renderSuggestion(): null}
         </View>
-        <View style={styles.chartsContainer}>
-            <Text>TOP CHARTS</Text>
+        <View style={styles.devInfoContainer}>
+            <View style={{width: width*.5,height:width*.4 , backgroundColor:colors.lBlue, justifyContent:'space-between'}}>
+                <View>
+                    <Text style={styles.text}>New Design Incoming</Text>
+                    <Text style={styles.text}>New Design Incoming</Text>
+                    <Text style={styles.text}>New Design Incoming</Text>
+                </View>
+                <View style={{alignSelf: 'center', width: width*.25 ,flexDirection:'row', justifyContent:'space-around', alignItems:'space-around'}}>
+                   
+                </View>
+            </View>
         </View>
-        {query ? null : this._renderChartListContainer()}
       </TouchableOpacity>
     )
-  }
-
-  _renderChartListContainer = () => {
-      return (
-        <View style={styles.imageContainer}>
-
-        </View>
-      )
-  }
-
-  _renderItemCharts = () => {
-
   }
 }
 
@@ -156,21 +163,19 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection:'column',
         alignItems: 'stretch',
-        backgroundColor: colors.warmWhite
+        backgroundColor: '#EDECEC'
     },
     headerContainer:{
+        top:15,
         flex:1,
-        // backgroundColor: 'red',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 25,
     },
     ////
     searchContainer: {
-        flex:1.8,
-        // backgroundColor: 'green',
-        justifyContent: 'center',
+        flex:1,
+        justifyContent: 'flex-end',
         alignItems: 'center'
 
     },
@@ -193,48 +198,6 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         // elevation: 0.3,
     },
-    ////
-
-    chartsContainer: {
-        flex:1,
-        // backgroundColor: 'grey',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    ////
-
-
-
-
-
-    imageContainer: {
-        flex:4,
-        // backgroundColor: 'blue',
-        justifyContent: 'center',
-        alignItems:'center'
-    },
-
-    imageScroll: {
-        flex:9,
-        // width: width,
-        alignItems: 'center',
-        justifyContent: 'space-around'
-    },
-
-    chartSongTitle: {
-        flex:1,
-        zIndex: 100,
-        // right:width* 0.25,
-        bottom:height*0.2
-    },
-
-    ////
-    font: {
-        // fontFamily: 'Menlo',
-        fontSize: 36,
-        fontWeight: "900"
-    },
-    //
     containerSuggestion: {
         justifyContent:'center',
         backgroundColor:'green',
@@ -246,23 +209,20 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
-    //
-    image: {
-        
-        width: width/ 2,
-        height: width* 0.50,
-        // resizeMode: 'contain'
-        borderRadius: 20,
+    ////
+    devInfoContainer: {
+        flex: 4,
+        width,
+        justifyContent:'center',
+        alignItems:'center'
     },
     text: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        color:colors.white
+        // color:'grey'
     },
-   
-    loadInfo: {
-        // justifyContent: 'center',
-        // alignItems: 'center'
-    },
+
 })
 
 export default HomeScreen
