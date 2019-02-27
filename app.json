@@ -9,6 +9,9 @@
       "android"
     ],
     "version": "1.0.0",
+    "android": {
+      "package": "com.example.myapp"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {

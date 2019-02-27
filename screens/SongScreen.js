@@ -7,8 +7,7 @@ import { Text, StyleSheet, View,
     Dimensions
  } from 'react-native'
 import colors from '../constants/Colors'
-import { Ionicons, AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { Font } from 'expo'
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get("window");
 
