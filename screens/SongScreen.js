@@ -6,12 +6,19 @@ import { Text, StyleSheet, View,
     ScrollView,
     TouchableOpacity,
     Dimensions,
+    LayoutAnimation
 
  } from 'react-native'
 import colors from '../constants/Colors'
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 
 const { width, height } = Dimensions.get("window");
+
+const close = height * .1;
+const open = height * .4;
+
 
 export default class SongScreen extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -23,26 +30,79 @@ export default class SongScreen extends Component {
                     size={26}
                     style={{color: 'white'}} />
             ),
-            headerTransparent: true,
+
+            headerStyle: {
+                backgroundColor: 'red',
+                shadowColor: 'transparent',
+                borderBottomWidth: 0
+
+            }
         }
     }
-
-
 
     state = {
         drag: new Animated.Value(0),
         lyricsLoaded: false,
         renderingInfo: false,
         lyrics: '',
+        openInfo: false,
     }
 
      async componentDidMount(){
+        // UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
          StatusBar.setHidden(true)
         // const { title, artist } = this.props.navigation.state.params;
         // const url = `https://api.lyrics.ovh/v1/${artist.name}/${title}`
         const url = `https://api.lyrics.ovh/v1/beyonce/halo`
 
         this._fetchLyrics(url)
+    }
+
+    openInfo = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+        // LayoutAnimation.configureNext({
+        //     duration: 250, 
+        //     create: {
+        //         type: LayoutAnimation.Types.linear,
+        //         property: LayoutAnimation.Properties.scaleX
+        //     },
+        //     update: {
+        //         type: LayoutAnimation.Types.linear,
+        //         // springDamping: 0.7,
+        //     }
+        // });
+        this.setState({ openInfo: !this.state.openInfo})
+    }
+
+
+    render() {
+        const { openInfo } = this.state
+        return (
+            <View style={styles.container}>
+                <View style={styles.topContainer}>
+                    <View style={[styles.infoContainer, openInfo ? {height: open} : {height:close}]}>
+                        {/* {openInfo ?  */}
+                        <Image source={{ uri: 'https://randomuser.me/api/portraits/women/32.jpg' }}
+                                            style={{ height: 200, width: 200 }}/>
+                        {/* : null
+                        } */}
+                        {/* <Image source={{ uri: 'https://randomuser.me/api/portraits/women/32.jpg' }}
+                                            style={{ height: 200, width: 200 }}/> */}
+                    </View>
+                    <MaterialIcons 
+                        onPress={this.openInfo}
+                        name={openInfo ? 'arrow-drop-up' : 'arrow-drop-down'}
+                        size={30}
+                        style={{color: 'white'}}/>
+                </View>
+
+
+                <View style={styles.bottomContainer}>
+
+                </View>
+
+            </View>
+        )
     }
 
     _fetchLyrics = (url) => {
@@ -55,28 +115,7 @@ export default class SongScreen extends Component {
                 })
             })
     }
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={styles.topContainer}>
-                    <View style={styles.infoContainer}>
-
-                    </View>
-                    <MaterialIcons 
-                        name='arrow-drop-down'
-                        size={30}
-                        style={{color: 'white'}}/>
-                </View>
-                <View style={styles.bottomContainer}>
-
-                </View>
-
-            </View>
-        )
-    }
     
-
 }
 
 const styles = StyleSheet.create({
@@ -94,10 +133,22 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 30,
     },
     infoContainer: {
-        // flex: 1,
-        height: height*.4,
         backgroundColor: 'pink',
         width: width* .8,
+        justifyContent: 'flex-end'
+    },
+    infoContainerClose: {
+        // flex: 1,
+        height: close,
+        backgroundColor: 'pink',
+        width: width* .8,
+        justifyContent: 'flex-end'
+    },
+    infoContainerOpen: {
+        height: open,
+        backgroundColor: 'pink',
+        width: width* .8,
+        justifyContent: 'flex-end'
     },
     bottomContainer: {
         // flex: 3,
