@@ -8,13 +8,26 @@ import {
     TextInput,
     FlatList,
     TouchableOpacity,
-    Linking
+    Linking,
+    Animated,
+    LayoutAnimation
+
 } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 import colors from '../constants/Colors'
 const { width, height } = Dimensions.get("window");
 
+var CustomLayoutAnimation = {
+    duration: 200,
+    create: {
+      type: LayoutAnimation.Types.linear,
+      property: LayoutAnimation.Properties.opacity,
+    },
+    update: {
+      type: LayoutAnimation.Types.curveEaseInEaseOut,
+    },
+  };
 
 class HomeScreen extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -24,9 +37,13 @@ class HomeScreen extends Component {
     }
 
     state ={
+        // drag: new Animated.Value(0),
         query: "",
         data: [],
         dataId: [],
+        triggerAnimation: false,
+        _scrollX : new Animated.Value(0),
+        arr:[1,2,3,4,5,6,7],
     }
 
     _handleQuery = (text) => {
@@ -91,24 +108,29 @@ class HomeScreen extends Component {
     }
 
   render() {
-      const { data, dataId, query, } = this.state;
+      const { data, dataId, query, triggerAnimation } = this.state;
+
 
     return (
-      <TouchableOpacity style={styles.container} onPress={this.clearQuery} >
+      <View style={styles.container} onPress={this.clearQuery} >
         <View style={[styles.headerContainer, ]}>
             <View style={{paddingLeft: 35}}>
                 <Text> Find The Lyrics v.1.0 </Text>
             </View>
-            <View style={{
-                    width:width*.35, 
-                    height: 40, 
-                    backgroundColor:colors.lBlue, 
-                    borderTopLeftRadius: 20, 
-                    borderBottomLeftRadius:20,
-                    flexDirection:'row',
-                    alignItems:'center',
-                    justifyContent:'space-evenly'
-                    }}>
+            <View style={[{
+                        width:width*.35, 
+                        height: 40, 
+                        backgroundColor:colors.lBlue, 
+                        borderTopLeftRadius: 20, 
+                        borderBottomLeftRadius:20,
+                        flexDirection:'row',
+                        alignItems:'center',
+                        justifyContent:'space-evenly'
+                    },
+                    // {
+                    //     opacity: imageOpacity
+                    // }
+                    ]}>
                 <AntDesign 
                     onPress={()=> Linking.openURL('http://www.instagram.com/dellwatson')}
                     style={{color:'grey'}} 
@@ -141,24 +163,44 @@ class HomeScreen extends Component {
             {query ? this._renderSuggestion(): null}
         </View>
         <View style={styles.devInfoContainer}>
-            <View style={{width: width*.5,height:width*.4 , backgroundColor:colors.lBlue, justifyContent:'space-between'}}>
-                <View>
-                    <Text style={styles.text}>New Design Incoming</Text>
-                    <Text style={styles.text}>New Design Incoming</Text>
-                    <Text style={styles.text}>New Design Incoming</Text>
-                </View>
-                <View style={{alignSelf: 'center', width: width*.25 ,flexDirection:'row', justifyContent:'space-around', alignItems:'space-around'}}>
-                   
-                </View>
+            {this._renderItem()}
+        </View>
+      </View>
+    )
+  }
+
+  triggerBox = () => {
+    LayoutAnimation.configureNext(CustomLayoutAnimation);
+
+      this.setState({
+          triggerAnimation: !this.state.triggerAnimation
+      })
+  }
+
+  _renderItem = () => {
+      return (
+        <View style={this.state.triggerAnimation ? styles.newContainer : styles.oldContainer  }>
+            <View>
+                <Text 
+                    onPress={this.triggerBox}
+                    style={styles.text}>New Design Incoming</Text>
+                <Text style={styles.text}>New Design Incoming</Text>
+                <Text style={styles.text}>New Design Incoming</Text>
             </View>
         </View>
-      </TouchableOpacity>
-    )
+      )
   }
 }
 
 //  styles
 const styles = StyleSheet.create({
+    oldContainer: {
+        width: width*.5,height:width*.4 , backgroundColor:colors.lBlue, justifyContent:'space-between'
+
+    },
+    newContainer:{
+        width ,height:width*.4 , backgroundColor:colors.lBlue, justifyContent:'space-between'
+    },
     container: {
         flex:1,
         flexDirection:'column',

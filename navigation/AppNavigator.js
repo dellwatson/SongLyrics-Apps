@@ -9,14 +9,12 @@ import SongScreen from '../screens/SongScreen'
 
 export default createAppContainer(createStackNavigator(
   {
-    HomeScreen,
+    // HomeScreen,
     SongScreen,
     BrowseScreen
   },
   {
-    navigationOptions: {
-
-    }
+    initialRouteName: 'SongScreen'
   }
 ))
 
