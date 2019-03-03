@@ -6,7 +6,8 @@ import { Text, StyleSheet, View,
     ScrollView,
     TouchableOpacity,
     Dimensions,
-    LayoutAnimation
+    LayoutAnimation,
+    SafeAreaView
 
  } from 'react-native'
 import colors from '../constants/Colors'
@@ -16,27 +17,25 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get("window");
 
-const close = height * .1;
-const open = height * .4;
+const close = 0;
+const open = height * .3;
 
 
 export default class SongScreen extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             headerTitle: 'HELLO',
+            headerStyle: {
+                backgroundColor: 'red',
+                shadowColor: 'transparent',
+                borderBottomWidth: 0
+            },
             headerLeft: (
                 <MaterialIcons 
                     name='keyboard-arrow-left'
                     size={26}
                     style={{color: 'white'}} />
             ),
-
-            headerStyle: {
-                backgroundColor: 'red',
-                shadowColor: 'transparent',
-                borderBottomWidth: 0
-
-            }
         }
     }
 
@@ -59,50 +58,19 @@ export default class SongScreen extends Component {
     }
 
     openInfo = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-        // LayoutAnimation.configureNext({
-        //     duration: 250, 
-        //     create: {
-        //         type: LayoutAnimation.Types.linear,
-        //         property: LayoutAnimation.Properties.scaleX
-        //     },
-        //     update: {
-        //         type: LayoutAnimation.Types.linear,
-        //         // springDamping: 0.7,
-        //     }
-        // });
+        // LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+        LayoutAnimation.configureNext({
+            duration: 250, 
+            create: {
+                type: LayoutAnimation.Types.linear,
+                property: LayoutAnimation.Properties.scaleX
+            },
+            update: {
+                type: LayoutAnimation.Types.linear,
+                // springDamping: 0.7,
+            }
+        });
         this.setState({ openInfo: !this.state.openInfo})
-    }
-
-
-    render() {
-        const { openInfo } = this.state
-        return (
-            <View style={styles.container}>
-                <View style={styles.topContainer}>
-                    <View style={[styles.infoContainer, openInfo ? {height: open} : {height:close}]}>
-                        {/* {openInfo ?  */}
-                        <Image source={{ uri: 'https://randomuser.me/api/portraits/women/32.jpg' }}
-                                            style={{ height: 200, width: 200 }}/>
-                        {/* : null
-                        } */}
-                        {/* <Image source={{ uri: 'https://randomuser.me/api/portraits/women/32.jpg' }}
-                                            style={{ height: 200, width: 200 }}/> */}
-                    </View>
-                    <MaterialIcons 
-                        onPress={this.openInfo}
-                        name={openInfo ? 'arrow-drop-up' : 'arrow-drop-down'}
-                        size={30}
-                        style={{color: 'white'}}/>
-                </View>
-
-
-                <View style={styles.bottomContainer}>
-
-                </View>
-
-            </View>
-        )
     }
 
     _fetchLyrics = (url) => {
@@ -115,44 +83,62 @@ export default class SongScreen extends Component {
                 })
             })
     }
-    
+
+    render() {
+        const { openInfo, lyrics, lyricsLoaded } = this.state
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.topContainer}>
+                    <View style={[styles.infoContainer, openInfo ? {height: open} : {height:close}]}>
+                        <Image 
+                            source={{ uri: 'https://randomuser.me/api/portraits/women/32.jpg' }}
+                            style={{ height: 200, width: 200 }}/>
+                        <View style={styles.infoRight}>
+                            <Text>Hello</Text>
+                        </View>
+                    </View>
+                    <MaterialIcons 
+                        onPress={this.openInfo}
+                        name={openInfo ? 'arrow-drop-up' : 'arrow-drop-down'}
+                        size={30}
+                        style={{color: 'white'}}/>
+                </View>
+                <ScrollView style={styles.bottomContainer}>
+                    {lyricsLoaded ? <Text>{lyrics}</Text> : null}
+                    {/* {kasih refetch or loading} */}
+                </ScrollView>
+            </SafeAreaView>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'green',
-        // alignItems: 'stretch'
     },
     topContainer: {
-        // flex: 1,
         backgroundColor: 'red',
         justifyContent:'flex-end',
         alignItems: 'center',
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
     },
     infoContainer: {
+        flexDirection:'row',
         backgroundColor: 'pink',
         width: width* .8,
-        justifyContent: 'flex-end'
+        justifyContent: 'space-between',
+        alignItems:'flex-end',
     },
-    infoContainerClose: {
-        // flex: 1,
-        height: close,
-        backgroundColor: 'pink',
-        width: width* .8,
-        justifyContent: 'flex-end'
-    },
-    infoContainerOpen: {
-        height: open,
-        backgroundColor: 'pink',
-        width: width* .8,
-        justifyContent: 'flex-end'
+    infoRight: {
+        flex:1,
+        height:open,
+        backgroundColor: 'blue',
     },
     bottomContainer: {
-        // flex: 3,
-        backgroundColor: 'blue'
+        flex: 1,
+        paddingLeft: width*.1,
+        paddingTop: 20,
     }
     
 })
