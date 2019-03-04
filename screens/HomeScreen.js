@@ -107,34 +107,36 @@ class HomeScreen extends Component {
       const { data, dataId, query, triggerAnimation } = this.state;
 
     return (
-      <View style={styles.container} onPress={this.clearQuery} >
-        <View style={[styles.headerContainer, ]}>
-            <View style={{paddingLeft: 35}}>
-                <Text styles={{fontFamily: 'Noto'}}> Find The Lyrics v.1.1 </Text>
+      <View style={styles.container} >
+        <TouchableWithoutFeedback style={[styles.headerContainer, ]} onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.headerContainer}>
+                <View style={{paddingLeft: 35}}>
+                    <Text styles={{fontFamily: 'Noto'}}> Find The Lyrics v.1.1 </Text>
+                </View>
+                <View style={[{
+                            width:width*.35, 
+                            height: 40, 
+                            backgroundColor:colors.lBlue, 
+                            borderTopLeftRadius: 20, 
+                            borderBottomLeftRadius:20,
+                            flexDirection:'row',
+                            alignItems:'center',
+                            justifyContent:'space-evenly'
+                        },
+                        ]}>
+                    <AntDesign 
+                        onPress={()=> Linking.openURL('http://www.instagram.com/dellwatson')}
+                        style={{color:'grey'}} 
+                        size={20} 
+                        name='instagram'/>
+                    <AntDesign 
+                        onPress={()=> Linking.openURL('http://www.github.com/dellwatson')}
+                        style={{color:'grey'}} 
+                        size={20} 
+                        name='github'/>
+                </View>
             </View>
-            <View style={[{
-                        width:width*.35, 
-                        height: 40, 
-                        backgroundColor:colors.lBlue, 
-                        borderTopLeftRadius: 20, 
-                        borderBottomLeftRadius:20,
-                        flexDirection:'row',
-                        alignItems:'center',
-                        justifyContent:'space-evenly'
-                    },
-                    ]}>
-                <AntDesign 
-                    onPress={()=> Linking.openURL('http://www.instagram.com/dellwatson')}
-                    style={{color:'grey'}} 
-                    size={20} 
-                    name='instagram'/>
-                <AntDesign 
-                    onPress={()=> Linking.openURL('http://www.github.com/dellwatson')}
-                    style={{color:'grey'}} 
-                    size={20} 
-                    name='github'/>
-            </View>
-        </View>
+        </TouchableWithoutFeedback>
 
         <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
@@ -155,8 +157,6 @@ class HomeScreen extends Component {
             {query ? this._renderSuggestion(): null}
         </View>
         <View style={styles.bottomContainer}>
-            {/* <Text style={[styles.text,{fontFamily:'Noto'}]}> Imagine Dragon Ariana Grande</Text>
-            <Text style={[styles.text,{fontFamily:'Nunito'}]}> Imagine Dragon Ariana Grande</Text> */}
         </View>
       </View>
     )

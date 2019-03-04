@@ -24,7 +24,7 @@ export default class SongScreen extends Component {
             headerTitle: <Text style={ styles.textHeader }>{navigation.state.params.title}</Text>,
             headerTintColor: 'white',
             titleStyle:{
-                fontSize: 30,
+                fontSize: 20,
                 fontFamily: 'Noto'
             },
             headerStyle: {
@@ -106,7 +106,7 @@ export default class SongScreen extends Component {
 
     render() {
         const { openInfo, lyrics, lyricsLoaded } = this.state
-        const { artist } = this.props.navigation.state.params;
+        const { artist, album } = this.props.navigation.state.params;
         console.log(lyricsLoaded)
 
         return (
@@ -117,13 +117,9 @@ export default class SongScreen extends Component {
                             source={{ uri: artist.picture_medium }}
                             style={{ height: 200, width: 200, borderRadius: 20, opacity: .9 }}/>
                         <View style={styles.infoRight}>
-                            <View style={{alignItems:'flex-start', justifyContent:'center'}}>
-                                <Text style={{fontFamily:'Nunito', color: 'white', fontSize: 20}}>Artist</Text>
-                                <Text style={{fontFamily:'Noto', color: 'grey', fontSize: 26}}>Hello</Text>
-                            </View>
-                            <View style={{alignItems:'flex-start', }}>
+                            <View style={{alignItems:'center', }}>
                                 <Text style={{fontFamily:'Nunito', color: 'grey', fontSize: 20}}>Album</Text>
-                                <Text style={{fontFamily:'Noto', color: 'grey' ,fontSize: 26}}>Hello</Text>
+                                <Text style={{fontFamily:'Noto', color: 'grey' ,fontSize: 26}}>{album.title}</Text>
                             </View>
                         </View>
                     </View>
