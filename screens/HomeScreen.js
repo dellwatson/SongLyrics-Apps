@@ -10,7 +10,9 @@ import {
     TouchableOpacity,
     Linking,
     Animated,
-    LayoutAnimation
+    LayoutAnimation,
+    TouchableWithoutFeedback,
+    ImageBackground
 
 } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
@@ -18,16 +20,10 @@ import { Dimensions } from 'react-native';
 import colors from '../constants/Colors'
 const { width, height } = Dimensions.get("window");
 
-var CustomLayoutAnimation = {
-    duration: 200,
-    create: {
-      type: LayoutAnimation.Types.linear,
-      property: LayoutAnimation.Properties.opacity,
-    },
-    update: {
-      type: LayoutAnimation.Types.curveEaseInEaseOut,
-    },
-  };
+
+const itemWidth = width* .70
+const itemHeight = height* .4
+
 
 class HomeScreen extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -110,12 +106,11 @@ class HomeScreen extends Component {
   render() {
       const { data, dataId, query, triggerAnimation } = this.state;
 
-
     return (
       <View style={styles.container} onPress={this.clearQuery} >
         <View style={[styles.headerContainer, ]}>
             <View style={{paddingLeft: 35}}>
-                <Text> Find The Lyrics v.1.0 </Text>
+                <Text styles={{fontFamily: 'Noto'}}> Find The Lyrics v.1.1 </Text>
             </View>
             <View style={[{
                         width:width*.35, 
@@ -127,9 +122,6 @@ class HomeScreen extends Component {
                         alignItems:'center',
                         justifyContent:'space-evenly'
                     },
-                    // {
-                    //     opacity: imageOpacity
-                    // }
                     ]}>
                 <AntDesign 
                     onPress={()=> Linking.openURL('http://www.instagram.com/dellwatson')}
@@ -162,45 +154,17 @@ class HomeScreen extends Component {
         <View style={{justifyContent:'flex-start', alignItems:'center'}}>
             {query ? this._renderSuggestion(): null}
         </View>
-        <View style={styles.devInfoContainer}>
-            {this._renderItem()}
+        <View style={styles.bottomContainer}>
+            {/* <Text style={[styles.text,{fontFamily:'Noto'}]}> Imagine Dragon Ariana Grande</Text>
+            <Text style={[styles.text,{fontFamily:'Nunito'}]}> Imagine Dragon Ariana Grande</Text> */}
         </View>
       </View>
     )
-  }
-
-  triggerBox = () => {
-    LayoutAnimation.configureNext(CustomLayoutAnimation);
-
-      this.setState({
-          triggerAnimation: !this.state.triggerAnimation
-      })
-  }
-
-  _renderItem = () => {
-      return (
-        <View style={this.state.triggerAnimation ? styles.newContainer : styles.oldContainer  }>
-            <View>
-                <Text 
-                    onPress={this.triggerBox}
-                    style={styles.text}>New Design Incoming</Text>
-                <Text style={styles.text}>New Design Incoming</Text>
-                <Text style={styles.text}>New Design Incoming</Text>
-            </View>
-        </View>
-      )
   }
 }
 
 //  styles
 const styles = StyleSheet.create({
-    oldContainer: {
-        width: width*.5,height:width*.4 , backgroundColor:colors.lBlue, justifyContent:'space-between'
-
-    },
-    newContainer:{
-        width ,height:width*.4 , backgroundColor:colors.lBlue, justifyContent:'space-between'
-    },
     container: {
         flex:1,
         flexDirection:'column',
@@ -219,7 +183,6 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent: 'flex-end',
         alignItems: 'center'
-
     },
     searchBar: {
         flexDirection: 'row',
@@ -252,17 +215,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     ////
-    devInfoContainer: {
+    bottomContainer: {
         flex: 4,
         width,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
     text: {
-        fontFamily:'Forum',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color:colors.white
+        color:colors.white,
+        fontSize: 28
         // color:'grey'
     },
 
