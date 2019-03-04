@@ -8,12 +8,21 @@ import {
     TextInput,
     FlatList,
     TouchableOpacity,
-    Linking
+    Linking,
+    Animated,
+    LayoutAnimation,
+    TouchableWithoutFeedback,
+    ImageBackground
+
 } from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 import colors from '../constants/Colors'
 const { width, height } = Dimensions.get("window");
+
+
+const itemWidth = width* .70
+const itemHeight = height* .4
 
 
 class HomeScreen extends Component {
@@ -24,9 +33,13 @@ class HomeScreen extends Component {
     }
 
     state ={
+        // drag: new Animated.Value(0),
         query: "",
         data: [],
         dataId: [],
+        triggerAnimation: false,
+        _scrollX : new Animated.Value(0),
+        arr:[1,2,3,4,5,6,7],
     }
 
     _handleQuery = (text) => {
@@ -91,36 +104,39 @@ class HomeScreen extends Component {
     }
 
   render() {
-      const { data, dataId, query, } = this.state;
+      const { data, dataId, query, triggerAnimation } = this.state;
 
     return (
-      <TouchableOpacity style={styles.container} onPress={this.clearQuery} >
-        <View style={[styles.headerContainer, ]}>
-            <View style={{paddingLeft: 35}}>
-                <Text> Find The Lyrics v.1.0 </Text>
+      <View style={styles.container} >
+        <TouchableWithoutFeedback style={[styles.headerContainer, ]} onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.headerContainer}>
+                <View style={{paddingLeft: 35}}>
+                    <Text styles={{fontFamily: 'Noto'}}> Find The Lyrics v.1.1 </Text>
+                </View>
+                <View style={[{
+                            width:width*.35, 
+                            height: 40, 
+                            backgroundColor:colors.lBlue, 
+                            borderTopLeftRadius: 20, 
+                            borderBottomLeftRadius:20,
+                            flexDirection:'row',
+                            alignItems:'center',
+                            justifyContent:'space-evenly'
+                        },
+                        ]}>
+                    <AntDesign 
+                        onPress={()=> Linking.openURL('http://www.instagram.com/dellwatson')}
+                        style={{color:'grey'}} 
+                        size={20} 
+                        name='instagram'/>
+                    <AntDesign 
+                        onPress={()=> Linking.openURL('http://www.github.com/dellwatson')}
+                        style={{color:'grey'}} 
+                        size={20} 
+                        name='github'/>
+                </View>
             </View>
-            <View style={{
-                    width:width*.35, 
-                    height: 40, 
-                    backgroundColor:colors.lBlue, 
-                    borderTopLeftRadius: 20, 
-                    borderBottomLeftRadius:20,
-                    flexDirection:'row',
-                    alignItems:'center',
-                    justifyContent:'space-evenly'
-                    }}>
-                <AntDesign 
-                    onPress={()=> Linking.openURL('http://www.instagram.com/dellwatson')}
-                    style={{color:'grey'}} 
-                    size={20} 
-                    name='instagram'/>
-                <AntDesign 
-                    onPress={()=> Linking.openURL('http://www.github.com/dellwatson')}
-                    style={{color:'grey'}} 
-                    size={20} 
-                    name='github'/>
-            </View>
-        </View>
+        </TouchableWithoutFeedback>
 
         <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
@@ -140,19 +156,9 @@ class HomeScreen extends Component {
         <View style={{justifyContent:'flex-start', alignItems:'center'}}>
             {query ? this._renderSuggestion(): null}
         </View>
-        <View style={styles.devInfoContainer}>
-            <View style={{width: width*.5,height:width*.4 , backgroundColor:colors.lBlue, justifyContent:'space-between'}}>
-                <View>
-                    <Text style={styles.text}>New Design Incoming</Text>
-                    <Text style={styles.text}>New Design Incoming</Text>
-                    <Text style={styles.text}>New Design Incoming</Text>
-                </View>
-                <View style={{alignSelf: 'center', width: width*.25 ,flexDirection:'row', justifyContent:'space-around', alignItems:'space-around'}}>
-                   
-                </View>
-            </View>
+        <View style={styles.bottomContainer}>
         </View>
-      </TouchableOpacity>
+      </View>
     )
   }
 }
@@ -177,7 +183,6 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent: 'flex-end',
         alignItems: 'center'
-
     },
     searchBar: {
         flexDirection: 'row',
@@ -210,17 +215,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     ////
-    devInfoContainer: {
+    bottomContainer: {
         flex: 4,
         width,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
     text: {
-        fontFamily:'Forum',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color:colors.white
+        color:colors.white,
+        fontSize: 28
         // color:'grey'
     },
 

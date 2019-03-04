@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View,
   Image,
+  Button
  } from 'react-native'
 
 export default class BrowseScreen extends Component {
@@ -22,8 +23,8 @@ export default class BrowseScreen extends Component {
     
   render() {
     return (
-      <View>
-        <Text>  </Text>
+      <View style={{ flex:1, justifyContent:'center', alignItems:'center'}}>
+        <Button title="Hello" onPress={() => this.props.navigation.navigate('SongScreen') }/>
       </View>
     )
   }

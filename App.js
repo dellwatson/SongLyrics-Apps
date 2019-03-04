@@ -25,8 +25,8 @@ export default class App extends React.Component {
   _loadResourcesAsync = async () => {
     return Promise.all([
       Font.loadAsync({
-        'Forum': require('./assets/fonts/Forum/Forum-Regular.ttf'),
-        'Patua': require('./assets/fonts/Patua_One/PatuaOne-Regular.ttf'),
+        'Noto': require('./assets/fonts/Noto_Sans_KR/NotoSansKR-Medium.otf' ),
+        'Nunito': require('./assets/fonts/Nunito/Nunito-Regular.ttf'),
       }),
     ]);
   };

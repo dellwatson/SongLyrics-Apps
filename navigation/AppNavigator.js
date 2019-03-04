@@ -14,9 +14,7 @@ export default createAppContainer(createStackNavigator(
     BrowseScreen
   },
   {
-    navigationOptions: {
-
-    }
+    initialRouteName: 'HomeScreen'
   }
 ))
 
